@@ -5,6 +5,18 @@ import VE1GR from "../welcome/VE1GR.jpg";
 import welcome from "../welcome/welcome.wav";
 import bg from "../welcome/bg.jpg";
 
+// 预加载
+const imgs = [abc, ciciyou, pystary, VE1GR, bg];
+imgs.forEach((img) => {
+  new Image().src = img;
+});
+
+const audio = [welcome];
+audio.forEach((aud) => {
+  const a = new Audio(aud);
+  a.preload = "auto";
+});
+
 export default function () {
   return { abc, ciciyou, pystary, VE1GR, welcome, bg };
 }

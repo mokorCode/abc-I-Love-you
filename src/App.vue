@@ -4,6 +4,7 @@ import Welcome from './views/Welcome/Welcome.vue';
 const global = globalData();
 import { gameListener } from './utils/emiter';
 import { onMounted } from 'vue';
+import _import from './assets/welcome/import';
 
 onMounted(() => {
   gameListener();
