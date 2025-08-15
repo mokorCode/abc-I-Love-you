@@ -6,14 +6,14 @@ import { gameListener } from './utils/emiter';
 import { onMounted, ref } from 'vue';
 import _import from './assets/welcome/import';
 
-let preload = ref(false);
+let preloaded = ref(false);
 
 onMounted(() => {
   document.title = 'wait...'
   _import().preload().then(() => {
     document.title = 'abc I love you'
     gameListener();
-    preload.value = true;
+    preloaded.value = true;
   });
 });
 </script>
