@@ -15,6 +15,9 @@ const audio = [welcome];
 audio.forEach((aud) => {
   const a = new Audio(aud);
   a.preload = "auto";
+  a.oncanplaythrough = () => {
+    console.log("资源预加载完毕");
+  };
 });
 
 export default function () {
