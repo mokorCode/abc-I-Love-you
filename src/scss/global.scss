@@ -1,0 +1,216 @@
+.continueGameShowing {
+    padding: 0 16px;
+    position: absolute;
+    border: 3px solid pink;
+    background: linear-gradient(to Top, hsl(-60, 100%, 50%), hsl(-60, 100%, 40%));
+    border-radius: 32px;
+    z-index: 100;
+    -webkit-border-radius: 32px;
+    -moz-border-radius: 32px;
+    -ms-border-radius: 32px;
+    -o-border-radius: 32px;
+    pointer-events: none
+}
+
+.continueGameShowingChapter {
+    @extend %onlyFont;
+    z-index: 101;
+}
+
+.warn {
+    position: fixed;
+    left: 50%;
+    top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 50px;
+    border: 3px solid pink;
+    background: linear-gradient(to top, hsl(-90, 100%, 50%), hsl(-60, 100%, 50%));
+    i {
+        @extend %onlyFont;
+    }
+    transform: translate(-50%);
+    -webkit-transform: translate(-50%);
+    -moz-transform: translate(-50%);
+    -ms-transform: translate(-50%);
+    -o-transform: translate(-50%);
+    z-index: 100;
+    border-radius: 32px;
+    -webkit-border-radius: 32px;
+    -moz-border-radius: 32px;
+    -ms-border-radius: 32px;
+    -o-border-radius: 32px;
+}
+
+%onlyFont {
+    background: linear-gradient(to top, hsl(-60, 100%, 35%), hsl(-90, 100%, 35%));
+    color: transparent;
+    font-size: 24px;
+    font-weight: 800;
+    background-clip: text;
+}
+
+.fadeOut {
+    animation: fadeOut ease-out 0.5s forwards;
+    -webkit-animation: fadeOut ease-out 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.fadeIn {
+    animation: fadeIn ease-out 0.5s forwards;
+    -webkit-animation: fadeIn ease-out 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    position: relative;
+}
+
+@mixin button($width: 160px, $height: 60px, $border: 8px, $hvBg: false) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 16px;
+    text-align: center;
+    width: $width;
+    height: $height;
+    background: linear-gradient(to Top, rgba(170, 0, 200, 0.5), rgba(80, 0, 170, 1));
+    border-radius: $border;
+    -webkit-border-radius: $border;
+    -moz-border-radius: $border;
+    -ms-border-radius: $border;
+    -o-border-radius: $border;
+    user-select: none;
+    border: 3px solid rgb(252, 139, 157);
+    &:hover {
+        background: linear-gradient(to Top, hsl(30, 100%, 50%), hsl(30, 100%, 30%));
+        cursor: pointer;
+    }
+}
+
+%fontStyle {
+    background: linear-gradient(to top, rgba(170, 0, 200, 0.5) 30%, rgba(255, 255, 255, 1) 50%, rgba(110, 0, 150, 0.5) 70%);
+    color: transparent;
+    font-size: 24px;
+    font-weight: 800;
+    background-clip: text;
+    &:hover {
+        background: linear-gradient(to top, hsl(30, 100%, 50%) 30%, rgba(255, 255, 255, 1) 50%, hsl(30, 100%, 30%) 70%);
+        background-clip: text;
+    }
+}
+
+%fontButtonContainer {
+    padding: 8px;
+}
+
+@mixin fontButton($fontSize: 24px) {
+    background: linear-gradient(to top, hsl(-80, 100%, 40%) 30%, rgba(255, 255, 255, 1) 50%, hsl(-80, 100%, 30%) 70%);
+    position: relative;
+    color: transparent;
+    font-size: $fontSize;
+    font-weight: 800;
+    background-clip: text;
+    user-select: none;
+    position: relative;
+    &:hover {
+        background: linear-gradient(to top, hsl(30, 100%, 50%) 30%, rgba(255, 255, 255, 1) 50%, hsl(30, 100%, 30%) 70%);
+        background-clip: text;
+        cursor: pointer;
+    }
+    &::before {
+        $height: 25;
+        $height1: 25px;
+        content: "1";
+        display: inline-block;
+        position: absolute;
+        height: $height1;
+        width: 25px;
+        background-color: red;
+        left: 0%;
+        top: #{50% - $height};
+        z-index: -1;
+    }
+}
+
+.topNav {
+    height: 80px;
+    background: linear-gradient(to Top, hsl(-80, 100%, 50%), hsl(-110, 100%, 30%));
+    border: 3px solid hsl(270, 100%, 30%);
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
+    .button {
+        @extend %fontButtonContainer;
+        margin-left: 32px;
+        i {
+            @include fontButton($fontSize: 32px);
+        }
+    }
+}
+
+.welcome-options {
+    max-width: 160px;
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+    li {
+        list-style: none;
+        padding: 8px;
+        i {
+            display: block;
+            width: 160px;
+            position: absolute;
+            margin-top: 4px;
+            width: 160px;
+            @include fontButton($fontSize: 24px);
+        }
+    }
+}
+
+.gaming-dialog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    border-top: 3px solid pink;
+    background: linear-gradient(to Top, hsla(15, 100%, 70%, 0.85), hsla(15, 100%, 78%, 0.85), hsla(15, 100%, 70%, 0.85));
+    .text {
+        margin: 16px;
+        word-wrap: break-word;
+        text-wrap: wrap;
+        user-select: none;
+        pointer-events: none;
+        font: {
+            size: 28px;
+            weight: 800;
+            family: "PingFang SC", "Hiragino Sans GB", "Heiti SC", sans-serif;
+        }
+    }
+    &.fadeIn {
+        cursor: pointer;
+    }
+}
