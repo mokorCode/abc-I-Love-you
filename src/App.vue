@@ -7,6 +7,7 @@ import { onMounted } from 'vue';
 import _import from './assets/welcome/import';
 
 onMounted(() => {
+  _import().preload();
   gameListener();
 });
 </script>

@@ -6,20 +6,24 @@ import welcome from "../welcome/welcome.wav";
 import bg from "../welcome/bg.jpg";
 
 // 预加载
-const imgs = [abc, ciciyou, pystary, VE1GR, bg];
-imgs.forEach((img) => {
-  new Image().src = img;
-});
+function preload() {
+  console.log("预加载...");
+  const imgs = [abc, ciciyou, pystary, VE1GR, bg];
+  imgs.forEach((img) => {
+    new Image().src = img;
+  });
 
-const audio = [welcome];
-audio.forEach((aud) => {
-  const a = new Audio(aud);
-  a.preload = "auto";
-  a.oncanplaythrough = () => {
-    console.log("资源预加载完毕");
-  };
-});
+  const audio = [welcome];
+  audio.forEach((aud) => {
+    const a = new Audio(aud);
+    a.preload = "auto";
+    a.oncanplaythrough = () => {
+      console.log("资源预加载完毕");
+      a.oncanplaythrough = null;
+    };
+  });
+}
 
 export default function () {
-  return { abc, ciciyou, pystary, VE1GR, welcome, bg };
+  return { abc, ciciyou, pystary, VE1GR, welcome, bg, preload };
 }
