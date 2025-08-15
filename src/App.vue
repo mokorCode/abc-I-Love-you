@@ -7,8 +7,11 @@ import { onMounted } from 'vue';
 import _import from './assets/welcome/import';
 
 onMounted(() => {
-  _import().preload();
-  gameListener();
+  document.title = 'wait...'
+  _import().preload().then(() => {
+    document.title = 'abc I love you'
+    gameListener();
+  });
 });
 </script>
 

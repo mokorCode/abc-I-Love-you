@@ -6,21 +6,31 @@ import welcome from "../welcome/welcome.wav";
 import bg from "../welcome/bg.jpg";
 
 // 预加载
-function preload() {
+async function preload() {
   console.log("预加载...");
   const imgs = [abc, ciciyou, pystary, VE1GR, bg];
   imgs.forEach((img) => {
     new Image().src = img;
   });
 
-  const audio = [welcome];
-  audio.forEach((aud) => {
-    const a = new Audio(aud);
-    a.preload = "auto";
-    a.oncanplaythrough = () => {
+  return new Promise((resolve) => {
+    const audio = [welcome];
+    const audioPromises = audio.map((aud) => {
+      return new Promise((resolve) => {
+        const a = new Audio(aud);
+        a.preload = "auto";
+        a.oncanplaythrough = () => {
+          a.volume = 0;
+          a.play();
+          a.oncanplaythrough = null;
+          resolve(true);
+        };
+      });
+    });
+    Promise.all(audioPromises).then(() => {
       console.log("资源预加载完毕");
-      a.oncanplaythrough = null;
-    };
+      resolve(true);
+    });
   });
 }
 
