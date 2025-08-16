@@ -18,6 +18,8 @@ export const sentenceContext = {
             },
           ],
           text: '...一年前，在KKC，我有幸结识这么一个传奇人物',
+
+          next: 1,
         },
         {
           // 1

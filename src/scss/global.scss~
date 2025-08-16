@@ -1,16 +1,14 @@
-.gaming-block-black {
+.gaming-block-black{
   width: 100%;
   height: 100vh;
   z-index: 9;
   background: black;
-  opacity: 0;
 }
-.gaming-block-white {
+.gaming-block-white{
   width: 100%;
   height: 100vh;
   z-index: 9;
   background: white;
-  opacity: 0;
 }
 .continueGameShowing {
   padding: 0 16px;

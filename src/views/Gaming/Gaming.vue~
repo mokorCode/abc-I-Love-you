@@ -73,7 +73,6 @@ function textPrinter() {
 }
 
 function blockApply(color, animation, duration, reserve) {
-return new Promise(resolve=>{
   let t = 0;
   let progress = 0;
   const target = {
@@ -88,14 +87,13 @@ return new Promise(resolve=>{
         ? 1 - easingFunction(1)
         : easingFunction(1);
       clearInterval(effectApplier);
-      resolve();
     }
     target.style.opacity = reserve
       ? 1 - easingFunction(progress)
       : easingFunction(progress);
     t += 16;
   }, 16);
-})}
+}
 async function dealEffects() {
   const currentEffects =
     sentenceContext[currentChapter.value][currentSection.value].sentences[
