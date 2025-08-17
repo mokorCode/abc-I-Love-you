@@ -15,8 +15,8 @@ export const globalData = defineStore("global", () => {
     section: 0,
     sentence: 0,
     chapterId: 0,
-    sectionId: 0,
-    sentenceId: -1,
+        sectionId: 0,
+	    sentenceId: 0
   });
   let gaming = ref(false);
   let paused = ref(false);

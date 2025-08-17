@@ -24,7 +24,6 @@ import { easeOut, linear, easeIn } from "@/utils/animation";
 const global = globalData();
 const { indexInf } = storeToRefs(global); // 进度信息如 chapter - 0 - 0 - 0
 const text = ref(null);
-let sentenceIndex = ref(0); // 句子索引
 let textFinished = ref(false);
 let printMachine = null;
 let printMachineIndex = 0;
@@ -37,11 +36,20 @@ const gamingBlockBlack = ref(null);
 const currentChapter = computed(() => indexInf.value.chapter);
 const currentSection = computed(() => indexInf.value.section);
 const currentSentence = computed(() => indexInf.value.sentence);
+const currentChapterId = computed(() => indexInf.value.chapterId);
+const currentSectionId = computed(() => indexInf.value.sectionId);
+const currentSentenceId = computed(() => indexInf.value.sentenceId);
+const next = computed(
+  () =>
+    sentenceContext[currentChapterId.value][currentSectionId.value].sentences[
+      currentSentenceId.value
+    ]?.next,
+);
 
 const sentenceText = computed(
   () =>
-    sentenceContext[indexInf.value.chapter][indexInf.value.section].sentences[
-      sentenceIndex.value
+    sentenceContext[currentChapterId.value][currentSectionId.value].sentences[
+      currentSentenceId.value
     ]?.text,
 ); // 当前Text
 
@@ -49,57 +57,64 @@ function dialogSkip() {
   if (!isDialogSkip) {
     isDialogSkip = true;
   }
-  if (textFinished.value) {
-    sentenceIndex.value += 1;
+  if (textFinished.value && !next.value) {
+    indexInf.value.sentenceId += 1;
+    indexInf.value.sentence += 1;
+  } else if (textFinished.value && next.value) {
+    jumpTo(next.value);
   }
 }
 
 function textPrinter() {
-  if (sentenceText.value) {
-    printMachine = setInterval(() => {
-      textNode += sentenceText.value[printMachineIndex];
-      text.value.innerHTML = textNode;
-      printMachineIndex += 1;
-      if (isDialogSkip) {
-        printMachineIndex = sentenceText.value.length;
-        text.value.innerHTML = sentenceText.value;
-      }
-      if (printMachineIndex >= sentenceText.value.length) {
-        textFinished.value = true;
-        clearInterval(printMachine);
-      }
-    }, printMachineFrequency);
-  }
+  return new Promise((resolve) => {
+    if (sentenceText.value) {
+      printMachine = setInterval(() => {
+        textNode += sentenceText.value[printMachineIndex];
+        text.value.innerHTML = textNode;
+        printMachineIndex += 1;
+        if (isDialogSkip) {
+          printMachineIndex = sentenceText.value.length;
+          text.value.innerHTML = sentenceText.value;
+        }
+        if (printMachineIndex >= sentenceText.value.length) {
+          textFinished.value = true;
+          resolve();
+          clearInterval(printMachine);
+        }
+      }, printMachineFrequency);
+    }
+  });
 }
 
 function blockApply(color, animation, duration, reserve) {
-return new Promise(resolve=>{
-  let t = 0;
-  let progress = 0;
-  const target = {
-    white: gamingBlockWhite.value,
-    black: gamingBlockBlack.value,
-  }[color];
-  const easingFunction = { easeOut, easeIn, linear }[animation];
-  const effectApplier = setInterval(() => {
-    progress = t / duration;
-    if (progress >= 1) {
+  return new Promise((resolve) => {
+    let t = 0;
+    let progress = 0;
+    const target = {
+      white: gamingBlockWhite.value,
+      black: gamingBlockBlack.value,
+    }[color];
+    const easingFunction = { easeOut, easeIn, linear }[animation];
+    const effectApplier = setInterval(() => {
+      progress = t / duration;
+      if (progress >= 1) {
+        target.style.opacity = reserve
+          ? 1 - easingFunction(1)
+          : easingFunction(1);
+        clearInterval(effectApplier);
+        resolve();
+      }
       target.style.opacity = reserve
-        ? 1 - easingFunction(1)
-        : easingFunction(1);
-      clearInterval(effectApplier);
-      resolve();
-    }
-    target.style.opacity = reserve
-      ? 1 - easingFunction(progress)
-      : easingFunction(progress);
-    t += 16;
-  }, 16);
-})}
+        ? 1 - easingFunction(progress)
+        : easingFunction(progress);
+      t += 16;
+    }, 16);
+  });
+}
 async function dealEffects() {
   const currentEffects =
-    sentenceContext[currentChapter.value][currentSection.value].sentences[
-      sentenceIndex.value
+    sentenceContext[currentChapterId.value][currentSectionId.value].sentences[
+      currentSentenceId.value
     ]?.effects;
   if (!currentEffects) return; // currentEffects 不存在, 终止
   for (let i = 0; i < currentEffects.length; i++) {
@@ -122,23 +137,41 @@ async function dealEffects() {
     }
   }
 }
+function jumpTo(progress) {
+  const nextProgress = progress.split("-");
+  indexInf.value.chapterId = Number(nextProgress[0]);
+  indexInf.value.sectionId = Number(nextProgress[1]);
+  indexInf.value.sentenceId = Number(nextProgress[2]);
+  if (Number(nextProgress[0]) != indexInf.value.chaperId) {
+    indexInf.value.chapter += 1;
+  }
+  if (Number(nextProgress[1]) != indexInf.value.sectionId) {
+    indexInf.value.section += 1;
+  }
+  if (Number(nextProgress[2]) != indexInf.value.sentenceId) {
+    indexInf.value.sentence += 1;
+  }
+}
 
+function init() {
+  textFinished.value = false;
+  textNode = "";
+  printMachineIndex = 0;
+  printMachine = null;
+  isDialogSkip = false;
+  printMachineFrequency = 50;
+}
 watch(
-  () => [indexInf.value, sentenceIndex.value],
+  () => [currentChapter, currentSection, currentSentence],
   async () => {
     console.log("进度变化！");
     console.log(indexInf.value);
 
     gamingBlockBlack.value.style.color = "white";
-    gamingBlockBlack.value.innerText = `${JSON.stringify(sentenceContext[indexInf.value.chapter][indexInf.value.section].sentences[sentenceIndex.value])}`; // debug
-    textFinished.value = false;
-    textNode = "";
-    printMachineIndex = 0;
-    printMachine = null;
-    isDialogSkip = false;
-    printMachineFrequency = 50;
+    gamingBlockBlack.value.innerText = `${JSON.stringify(sentenceContext[currentChapterId.value][currentSectionId.value].sentences[currentSentenceId.value])}`; // debug
+    init();
     await dealEffects();
-    textPrinter();
+    await textPrinter();
   },
   { deep: true },
 );

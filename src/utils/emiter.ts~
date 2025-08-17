@@ -17,7 +17,7 @@ export function gameListener() {
       global.indexInf.sentence = 1;
       global.indexInf.chapter = 0;
       global.indexInf.section = 0;
-      global.indexInf.sentenceId = 0;
+      global.indexInf.sentenceId = 1;
       global.indexInf.chapterId = 0;
       global.indexInf.sectionId = 0;
       global.warn("左键对话框继续");
