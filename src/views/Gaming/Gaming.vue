@@ -39,12 +39,7 @@ const currentSentence = computed(() => indexInf.value.sentence);
 const currentChapterId = computed(() => indexInf.value.chapterId);
 const currentSectionId = computed(() => indexInf.value.sectionId);
 const currentSentenceId = computed(() => indexInf.value.sentenceId);
-const next = computed(
-  () =>
-    sentenceContext[currentChapterId.value][currentSectionId.value].sentences[
-      currentSentenceId.value
-    ]?.next,
-);
+const next = computed(()=>sentenceContext[currentChapterId.value][currentSectionId.value].sentences[currentSentenceId.value]?.next);
 
 const sentenceText = computed(
   () =>
@@ -60,8 +55,8 @@ function dialogSkip() {
   if (textFinished.value && !next.value) {
     indexInf.value.sentenceId += 1;
     indexInf.value.sentence += 1;
-  } else if (textFinished.value && next.value) {
-    jumpTo(next.value);
+  } else if (textFinished.value && next.value){
+	       jumpTo(next.value);
   }
 }
 
@@ -142,14 +137,14 @@ function jumpTo(progress) {
   indexInf.value.chapterId = Number(nextProgress[0]);
   indexInf.value.sectionId = Number(nextProgress[1]);
   indexInf.value.sentenceId = Number(nextProgress[2]);
-  if (Number(nextProgress[0]) != indexInf.value.chaperId) {
-    indexInf.value.chapter += 1;
+  if (Number(nextProgress[0]) != indexInf.value.chaperId){
+	indexInf.value.chapter += 1;
   }
-  if (Number(nextProgress[1]) != indexInf.value.sectionId) {
-    indexInf.value.section += 1;
+  if (Number(nextProgress[1]) != indexInf.value.sectionId){
+  	indexInf.value.section += 1;
   }
-  if (Number(nextProgress[2]) != indexInf.value.sentenceId) {
-    indexInf.value.sentence += 1;
+  if (Number(nextProgress[2]) != indexInf.value.sentenceId){
+  	indexInf.value.sentence += 1;
   }
 }
 
